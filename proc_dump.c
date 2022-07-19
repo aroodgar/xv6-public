@@ -16,9 +16,9 @@ struct local_info{
     int a;
     char c;
     float f;
-}
+};
 
-int call_proc_dump();
+void call_proc_dump();
 
 int
 main(int argc, char **argv)
@@ -70,9 +70,10 @@ main(int argc, char **argv)
 }
 
 // should only be called in the main process
-int
+void
 call_proc_dump()
 {
+    int i;
     struct proc_info* procs_info = (struct proc_info*)(malloc(NPROC * sizeof(struct proc_info)));
     int cnt = proc_dump(procs_info, NPROC);
     if (cnt < 0){

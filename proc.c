@@ -541,8 +541,6 @@ proc_dump(struct proc_info* ptr, int n)
   int j, k;
   struct proc *p;
   struct proc_info tmp;
-  char *state;
-  uint pc[10];
   if (n > NPROC)
     n = NPROC;
 

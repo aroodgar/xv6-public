@@ -95,7 +95,7 @@ int sys_proc_dump(void)
 {
   struct proc_info* ptr;
   int n;
-  if (argint(1, &n) < 0 || argptr(0, &ptr, n) < 0)
+  if (argint(1, &n) < 0 || argptr(0, (void *)&ptr, sizeof(*ptr) * n) < 0)
     return -1;
   return proc_dump(ptr, n);
 }
