@@ -534,7 +534,7 @@ procdump(void)
   }
 }
 
-void
+int
 proc_dump(struct proc_info* ptr, int n)
 {
   int i = 0;
@@ -566,4 +566,6 @@ proc_dump(struct proc_info* ptr, int n)
       }
     }
   }
+
+  return i;
 }

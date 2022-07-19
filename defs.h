@@ -121,7 +121,7 @@ void            userinit(void);
 int             wait(void);
 void            wakeup(void*);
 void            yield(void);
-void            proc_dump(struct proc_info*, int);
+int             proc_dump(struct proc_info*, int);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

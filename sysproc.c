@@ -97,6 +97,5 @@ int sys_proc_dump(void)
   int n;
   if (argint(1, &n) < 0 || argptr(0, &ptr, n) < 0)
     return -1;
-  proc_dump(ptr, n);
-  return 0;
+  return proc_dump(ptr, n);
 }
