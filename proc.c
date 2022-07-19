@@ -6,6 +6,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "proc_info.h"
 
 struct {
   struct spinlock lock;
@@ -531,4 +532,38 @@ procdump(void)
     }
     cprintf("\n");
   }
+}
+
+int
+proc_dump(struct proc_info* ptr, int n)
+{
+  int i = 0;
+  int j, k;
+  struct proc *p;
+  struct proc_info tmp;
+  if (n > NPROC)
+    n = NPROC;
+
+  for(p = ptable.proc; p < &ptable.proc[n]; p++){
+    if(p->state == RUNNABLE || p->state == RUNNING){
+      ptr[i].pid = p->pid;
+      ptr[i].memsize = p->sz;
+      i++;
+    }
+  }
+
+  for(j = 0; j < i - 1; j++)
+  {
+    for(k = j + 1; k < i; k++)
+    {
+      if (ptr[j].memsize > ptr[k].memsize)
+      {
+        tmp = ptr[j];
+        ptr[j] = ptr[k];
+        ptr[k] = tmp;
+      }
+    }
+  }
+
+  return i;
 }
