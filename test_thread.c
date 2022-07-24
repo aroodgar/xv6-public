@@ -1,5 +1,6 @@
 #include "thread.h"
 #include "types.h"
+#include "user.h"
 
 lock_t lock;
 
