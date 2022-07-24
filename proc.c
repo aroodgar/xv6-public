@@ -222,6 +222,57 @@ fork(void)
   return pid;
 }
 
+
+// Create a new thread copying p as the parent.
+// Sets up stack to return as if from system call.
+// Caller must set state of returned thread to RUNNABLE.
+
+// NOTE: We are in fact creating a delusion of threading.
+// Meaning we are only creating a new process with the same
+// address space as the parent.
+int
+clone(void *stack, int size)
+{
+  int i, tid;
+  uint newsize;
+  struct proc *nt;
+  struct proc *curproc = myproc();
+
+  // Allocate process(thread).
+  if((nt = allocproc()) == 0){
+    return -1;
+  }
+
+  nt->pgdir = curproc->pgdir;
+  nt->sz = curproc->sz;
+  nt->parent = curproc;
+  *nt->tf = *curproc->tf;
+
+  newsize = (uint)((void *)(curproc->tf->ebp) - (void*)(curproc->tf->esp));
+  nt->tf->esp = (uint)(stack + size - newsize);
+  memmove((void*)nt->tf->esp, (void*)curproc->tf->esp, newsize);
+
+  // Clear %eax so that fork returns 0 in the child.
+  nt->tf->eax = 0;
+
+  for(i = 0; i < NOFILE; i++)
+    if(curproc->ofile[i])
+      nt->ofile[i] = filedup(curproc->ofile[i]);
+  nt->cwd = idup(curproc->cwd);
+
+  safestrcpy(nt->name, curproc->name, sizeof(curproc->name));
+
+  tid = nt->pid;
+
+  acquire(&ptable.lock);
+
+  nt->state = RUNNABLE;
+
+  release(&ptable.lock);
+
+  return tid;  
+}
+
 // Exit the current process.  Does not return.
 // An exited process remains in the zombie state
 // until its parent calls wait() to find out it exited.
