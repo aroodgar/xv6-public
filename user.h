@@ -4,8 +4,10 @@ struct proc_info;
 
 // system calls
 int fork(void);
+int clone(void*, int);
 int exit(void) __attribute__((noreturn));
 int wait(void);
+int join(void);
 int pipe(int*);
 int write(int, const void*, int);
 int read(int, void*, int);

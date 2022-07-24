@@ -91,11 +91,28 @@ sys_uptime(void)
   return xticks;
 }
 
-int sys_proc_dump(void)
+int 
+sys_proc_dump(void)
 {
   struct proc_info* ptr;
   int n;
   if (argint(1, &n) < 0 || argptr(0, (void *)&ptr, sizeof(*ptr) * n) < 0)
     return -1;
   return proc_dump(ptr, n);
+}
+
+int 
+sys_clone(void)
+{
+  void* ptr;
+  int size;
+  if (argint(1, &size) < 0 || argptr(0, (void*)&ptr, size) < 0)
+    return -1;
+  return clone(ptr, size);
+}
+
+int 
+sys_join(void)
+{
+  return join();
 }
